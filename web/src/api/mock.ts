@@ -80,7 +80,7 @@ export function mockProfile(phone: string): Profile {
     branches,
     referral: {
       text: 'Пригласите подругу — она получит 1 000 бонусов на первый визит, а вы 1 000 бонусов после её посещения.',
-      link: 'https://t.me/club_bot?start=ref_c1024',
+      link: 'https://t.me/miniapptest7_bot?start=ref_c1024',
       invited: 4,
       bonuses: 3000,
     },
