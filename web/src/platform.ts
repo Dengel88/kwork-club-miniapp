@@ -18,10 +18,13 @@ declare global {
 }
 
 function detect(): { name: PlatformName; app: Bridge | null } {
+  // Оба bridge-скрипта создают объекты и вне мессенджера (с пустым initData),
+  // поэтому платформу признаём только при непустой строке initData.
+  const filled = (s: unknown) => typeof s === 'string' && s.length > 0;
   const tg = window.Telegram?.WebApp;
-  if (tg && tg.initData) return { name: 'telegram', app: tg };
+  if (tg && filled(tg.initData)) return { name: 'telegram', app: tg };
   const max = window.WebApp;
-  if (max && (max.initData || max.initDataUnsafe)) return { name: 'max', app: max };
+  if (max && max !== tg && filled(max.initData)) return { name: 'max', app: max };
   return { name: 'browser', app: null };
 }
 
