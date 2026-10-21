@@ -85,8 +85,8 @@ export function mockProfile(phone: string): Profile {
       bonuses: 3000,
     },
     links: {
-      // В демо чат «отдела заботы» — сам тестовый бот; в проде здесь будет аккаунт менеджера клуба.
-      managerChat: 'https://t.me/miniapptest7_bot',
+      // В демо чат «отдела заботы» — демо-аккаунт менеджера; в проде — аккаунт менеджера клуба.
+      managerChat: 'https://t.me/SynndicateDemo',
       // В демо — общая страница yclients; в проде — ссылка на онлайн-запись филиала.
       onlineBooking: 'https://yclients.com/',
     },
