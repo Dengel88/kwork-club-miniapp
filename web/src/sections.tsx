@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { Profile, VisitRecord } from './api/types';
-import { rateVisit } from './api/client';
+import { isDemo, rateVisit } from './api/client';
 import { platform } from './platform';
 import { date, dateTime, formatPhone, num, plural, rub, weekday } from './format';
 
@@ -59,14 +59,32 @@ export function Cards({ p }: { p: Profile }) {
 /* 3. Кнопки действий */
 export function Actions({ p }: { p: Profile }) {
   const name = p.client.name;
+  const [bookingInfo, setBookingInfo] = useState(false);
+  const openBooking = () => {
+    platform.haptic();
+    // В демо ссылки салона ещё нет — объясняем, что откроется, вместо перехода на чужой сайт.
+    if (isDemo) setBookingInfo(true);
+    else platform.openLink(p.links.onlineBooking);
+  };
   return (
     <section className="actions">
+      {bookingInfo && (
+        <div className="sheet-backdrop" onClick={() => setBookingInfo(false)}>
+          <div className="sheet" role="dialog" aria-modal="true" aria-labelledby="booking-title" onClick={(e) => e.stopPropagation()}>
+            <div className="sheet-handle" />
+            <h2 id="booking-title">Онлайн-запись</h2>
+            <p>Здесь откроется онлайн-запись вашего салона в yclients: клиент сам выберет филиал, услугу, мастера и удобное время.</p>
+            <p className="muted">Подключается по ссылке на онлайн-запись из вашего кабинета yclients — без доработки приложения.</p>
+            <button className="btn btn-primary" onClick={() => setBookingInfo(false)}>Понятно</button>
+          </div>
+        </div>
+      )}
       <button className="btn btn-primary" onClick={() => {
         platform.haptic();
         platform.openChat(p.links.managerChat, `Здравствуйте! Меня зовут ${name}, хочу записаться на процедуру.`);
       }}>Записаться на процедуру</button>
       <div className="actions-row">
-        <button className="btn" onClick={() => { platform.haptic(); platform.openLink(p.links.onlineBooking); }}>Онлайн-запись</button>
+        <button className="btn" onClick={openBooking}>Онлайн-запись</button>
         <button className="btn" onClick={() => {
           platform.haptic();
           platform.openChat(p.links.managerChat, `Здравствуйте! Это ${name}, у меня вопрос.`);
